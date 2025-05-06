@@ -1,0 +1,61 @@
+i need a price also for this service below:
+
+Experience Level: Entry
+I am looking for someone who has already done an integration between TeleCRM and Brevo mail system.
+
+I need to be able to send email campaigns by extracting data / leads from TeleCRM towards Brevo. TeleCRM will push the data towards Brevo once Brevo has been setup.
+
+I pay only once the full implementation has been done and it is up and running.
+
+I am looking for someone with Python experience, as I don't want to use Zapier to manage the integration segmentation using Flask.
+
+TeleCRM Video available to explain how the CRM is structured.
+
+See the last conversation I had with Brevo:
+
+Thanks for reaching out about this!
+
+To go into detail on each point, please see below:
+
+1- Yes this is possible with Brevo API. You can access our developer documentation here: https://developers.brevo.com/
+2- This would need to be set up through a third party, such as Zapier but is possible. Brevo automatically records unsubscribed but to push it over would need a third party.
+3- This can be done via segmentation, more information is available here:nhttps://help.brevo.com/hc/en-us/articles/11482358925458-Segment-your-contacts-using-a-segment-template
+4 &5 - This can also be achieved through automations. (https://help.brevo.com/hc/en-us/articles/208775609-Introduction-to-Marketing-Automation)
+6- Yes, more information can be found with webhooks: (https://help.brevo.com/hc/en-us/articles/360007666479-Create-webhooks-to-receive-real-time-updates-about-your-emails-and-contacts)
+7 - While we do have a spam checker, it is not to be used as a cleaning service and is instead used to help prevent fraudulent and spam emails on the platform. We suggest ensuring that your database is clean before sending a campaign.
+8 - While this is possible, you would need to self-manage this. It will go through one SMTP port, but you can make several keys for multiple.
+9- Finally, yes, all of this can be done in the Brevo editor!
+
+I would also like to clarify that Brevo is a self-service platform. So while we are always happy to help with questions, all of this will need to be set up on the user side.
+
+I hope this helps!
+
+"""""""""""""""""""""""""""""""""""""""""""
+
+It will take me 3 days for the refund to happen with the other guy, so we can start in the meantime the AI Scaper development.
+
+""""""""""""""""""""""""""""""""""""""""""""
+Please Nemanja meet Ramsha of TeleCRM; Nemanja will be in charge of the integration between TeleCRM and BREVO.
+The previous developer become unresponsive
+I post you some info below
+
+""""""""""""""""""""""""
+picture
+
+
+
+all the contact with "Alessio Brancaleone" they have different e-mail each of them. You can use them just write "Test" so I know it is coming from yourself.
+This the setting that you will have access to
+""""""""""""""""""""""
+picture
+
+https://www.dropbox.com/scl/fi/w31ri69zx5ltig1q9ox00/2025-04-09_14-18-37.mkv?rlkey=sdbvlaxyx0qj1x62yyiefcttm&dl=0 
+This is video summary in TeleCRM which you already have
+@ceceznemanja4 once I get the mail from you I will provide the access to TeleCRM and Brevo. Thanks
+""""""""""""""""""""""""
+
+
+
+
+
+
