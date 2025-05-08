@@ -116,4 +116,4 @@ If you encounter issues when transitioning from demo to real keys:
 
 ## Support
 
-If you need additional assistance with the demo mode or transitioning to real API keys, please contact our support team at support@example.com. 
+If you need additional assistance with the demo mode or transitioning to real API keys, please contact our support team at cecezinemana524@gmail.com. 
