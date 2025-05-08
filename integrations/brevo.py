@@ -12,7 +12,11 @@ class BrevoClient:
     
     def __init__(self, api_key: str):
         self.api_key = api_key
-        self.configure_api()
+        # Check if we're using a demo key
+        self.is_demo = "demo" in api_key.lower()
+        
+        if not self.is_demo:
+            self.configure_api()
         
     def configure_api(self):
         """
@@ -28,6 +32,11 @@ class BrevoClient:
         """
         Create or update a contact in Brevo
         """
+        # Return mock response for demo mode
+        if self.is_demo:
+            logger.info(f"DEMO MODE: Creating/updating contact with email {email}")
+            return {"status": "success", "message": "Contact created or updated successfully in demo mode"}
+            
         try:
             create_contact = sib_api_v3_sdk.CreateContact(
                 email=email,
@@ -45,6 +54,14 @@ class BrevoClient:
         """
         Create a new contacts list in Brevo
         """
+        # Return mock response for demo mode
+        if self.is_demo:
+            logger.info(f"DEMO MODE: Creating contact list with name {name}")
+            # Generate a fake ID between 1-100
+            import random
+            list_id = random.randint(1, 100)
+            return {"status": "success", "list_id": list_id, "message": "List created successfully in demo mode"}
+            
         try:
             create_list = sib_api_v3_sdk.CreateList(
                 name=name,
@@ -61,6 +78,17 @@ class BrevoClient:
         """
         Get all contact lists from Brevo
         """
+        # Return mock response for demo mode
+        if self.is_demo:
+            logger.info("DEMO MODE: Getting all contact lists")
+            return {
+                "status": "success", 
+                "lists": [
+                    {"id": 1, "name": "Demo List 1", "total_subscribers": 42},
+                    {"id": 2, "name": "Demo List 2", "total_subscribers": 18}
+                ]
+            }
+            
         try:
             result = self.list_api_instance.get_lists(limit=50)
             return {"status": "success", "lists": result.lists}
@@ -72,6 +100,11 @@ class BrevoClient:
         """
         Add multiple contacts to a list in Brevo
         """
+        # Return mock response for demo mode
+        if self.is_demo:
+            logger.info(f"DEMO MODE: Adding {len(contact_emails)} contacts to list {list_id}")
+            return {"status": "success", "message": f"Added {len(contact_emails)} contacts to list {list_id} in demo mode"}
+            
         try:
             add_contacts_to_list = sib_api_v3_sdk.AddContactToList(
                 emails=contact_emails
@@ -88,6 +121,18 @@ class BrevoClient:
         """
         Create an email campaign in Brevo
         """
+        # Return mock response for demo mode
+        if self.is_demo:
+            logger.info(f"DEMO MODE: Creating email campaign with name {name}")
+            # Generate a fake campaign ID
+            import random
+            campaign_id = random.randint(1000, 9999)
+            return {
+                "status": "success", 
+                "campaign_id": campaign_id,
+                "message": "Email campaign created successfully in demo mode"
+            }
+            
         try:
             email_campaigns = sib_api_v3_sdk.CreateEmailCampaign(
                 name=name,
@@ -111,6 +156,27 @@ class BrevoClient:
         """
         Get contact information by email
         """
+        # Return mock response for demo mode
+        if self.is_demo:
+            logger.info(f"DEMO MODE: Getting contact info for {email}")
+            # Generate fake contact data
+            return {
+                "status": "success", 
+                "contact": {
+                    "email": email,
+                    "id": hash(email) % 10000,  # Generate a stable fake ID
+                    "attributes": {
+                        "FIRSTNAME": "Demo",
+                        "LASTNAME": "User",
+                        "SMS": None,
+                        "COMPANY": "Demo Company"
+                    },
+                    "listIds": [1, 2],
+                    "createdAt": "2023-01-01T00:00:00Z",
+                    "modifiedAt": "2023-06-15T00:00:00Z"
+                }
+            }
+            
         try:
             result = self.api_instance.get_contact_info(email)
             return {"status": "success", "contact": result}
@@ -122,6 +188,14 @@ class BrevoClient:
         """
         Create a webhook in Brevo to receive real-time updates
         """
+        # Return mock response for demo mode
+        if self.is_demo:
+            logger.info(f"DEMO MODE: Creating webhook with URL {url}")
+            # Generate a fake webhook ID
+            import random
+            webhook_id = random.randint(1, 100)
+            return {"status": "success", "webhook_id": webhook_id, "message": "Webhook created successfully in demo mode"}
+            
         try:
             # Initialize the WebhooksApi instance
             webhook_api = sib_api_v3_sdk.WebhooksApi(sib_api_v3_sdk.ApiClient(sib_api_v3_sdk.Configuration()))

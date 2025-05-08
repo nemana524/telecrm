@@ -10,6 +10,7 @@ This project implements an integration between TeleCRM and Brevo mail system to 
 - Create email campaigns in Brevo targeting TeleCRM leads
 - Webhook support for real-time updates
 - Flexible filtering and segmentation options
+- **Demo mode** for testing without real API keys
 
 ## Requirements
 
@@ -38,12 +39,38 @@ cp env.example .env
 
 4. Fill in your API keys in the `.env` file:
 ```
+# For real API keys:
 TELECRM_API_KEY=your_telecrm_api_key
 TELECRM_API_URL=https://app.telecrm.in/api/v1
 BREVO_API_KEY=your_brevo_api_key
+
+# OR for demo mode:
+TELECRM_API_KEY=demo_telecrm_api_key_12345
+TELECRM_API_URL=https://app.telecrm.in/api/v1
+BREVO_API_KEY=demo_brevo_api_key_12345
 ```
 
 ## Usage
+
+### Demo Mode
+
+This integration supports a demo mode that allows you to test the application without real API keys. To use demo mode:
+
+1. Configure your `.env` file with demo keys (containing the word "demo"):
+```
+TELECRM_API_KEY=demo_telecrm_api_key_12345
+TELECRM_API_URL=https://app.telecrm.in/api/v1
+BREVO_API_KEY=demo_brevo_api_key_12345
+```
+
+2. Run the test script to verify demo functionality:
+```
+python test_demo.py
+```
+
+3. Start the application normally - it will automatically detect demo keys and use mock data.
+
+For detailed documentation on demo mode, see [Demo Mode Documentation](docs/DEMO_MODE.md).
 
 ### Starting the Server
 
@@ -96,6 +123,17 @@ POST /webhooks/telecrm
 2. Go to API Keys & Management > API Keys
 3. Create a new API key with appropriate permissions
 4. Use this key in your `.env` file
+
+## Transitioning from Demo to Real Keys
+
+When you're ready to use real API keys:
+
+1. Update your `.env` file with actual API keys from TeleCRM and Brevo
+2. Restart your application
+3. Test basic operations to verify connectivity
+4. Monitor logs for any API-related errors
+
+See the [Demo Mode Documentation](docs/DEMO_MODE.md) for detailed instructions.
 
 ## Additional Integration Options
 

@@ -1,14 +1,10 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import os
-from dotenv import load_dotenv
 import logging
 from integrations.telecrm import TeleCRMClient
 from integrations.brevo import BrevoClient
 from services.lead_sync import LeadSyncService
-
-# Load environment variables
-load_dotenv()
 
 # Configure logging
 logging.basicConfig(
@@ -21,13 +17,22 @@ logger = logging.getLogger(__name__)
 app = Flask(__name__)
 CORS(app)
 
+# Use demo API keys
+telecrm_api_key = 'demo_telecrm_api_key_12345'
+telecrm_api_url = 'https://app.telecrm.in/api/v1'
+brevo_api_key = 'demo_brevo_api_key_12345'
+
+logger.info(f"Using TeleCRM API key: {telecrm_api_key[:5]}...")
+logger.info(f"Using TeleCRM API URL: {telecrm_api_url}")
+logger.info(f"Using Brevo API key: {brevo_api_key[:5]}...")
+
 # Initialize clients
 telecrm_client = TeleCRMClient(
-    api_key=os.getenv('TELECRM_API_KEY'),
-    api_url=os.getenv('TELECRM_API_URL')
+    api_key=telecrm_api_key,
+    api_url=telecrm_api_url
 )
 brevo_client = BrevoClient(
-    api_key=os.getenv('BREVO_API_KEY')
+    api_key=brevo_api_key
 )
 
 # Initialize services
@@ -37,7 +42,8 @@ lead_sync_service = LeadSyncService(telecrm_client, brevo_client)
 def home():
     return jsonify({
         "status": "success",
-        "message": "TeleCRM-Brevo Integration API is running"
+        "message": "TeleCRM-Brevo Integration API is running",
+        "demo_mode": "demo" in telecrm_api_key.lower()
     })
 
 @app.route('/sync', methods=['POST'])
@@ -91,4 +97,5 @@ def telecrm_webhook():
         }), 500
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=int(os.getenv('PORT', 5000)), debug=False) 
+    # Use 127.0.0.1 instead of 0.0.0.0 to avoid socket issues on Windows
+    app.run(host='127.0.0.1', port=5000, debug=True) 

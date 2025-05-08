@@ -1,6 +1,8 @@
 import requests
 import logging
 from typing import Dict, List, Any, Optional
+import json
+import os
 
 logger = logging.getLogger(__name__)
 
@@ -16,11 +18,17 @@ class TeleCRMClient:
             "Authorization": f"Bearer {self.api_key}",
             "Content-Type": "application/json"
         }
+        # Check if we're using a demo key
+        self.is_demo = "demo" in api_key.lower()
     
     def _make_request(self, method: str, endpoint: str, data: Optional[Dict] = None, params: Optional[Dict] = None) -> Dict:
         """
         Helper method to make requests to TeleCRM API
         """
+        # If using demo key, return mock data
+        if self.is_demo:
+            return self._get_mock_response(endpoint, method, params)
+            
         url = f"{self.api_url}/{endpoint.lstrip('/')}"
         
         try:
@@ -41,6 +49,103 @@ class TeleCRMClient:
         except requests.exceptions.RequestException as e:
             logger.error(f"Error when calling TeleCRM API: {e}")
             raise
+    
+    def _get_mock_response(self, endpoint: str, method: str, params: Optional[Dict] = None) -> Dict:
+        """
+        Return mock data for demo mode
+        """
+        logger.info(f"DEMO MODE: Returning mock data for {method} {endpoint}")
+        
+        # Mock leads data
+        if endpoint.startswith('/leads'):
+            if endpoint == "/leads" and method == "GET":
+                # Return a list of mock leads
+                return {
+                    "data": [
+                        {
+                            "id": "lead1",
+                            "name": "John Doe",
+                            "email": "john.doe@example.com",
+                            "phone": "1234567890",
+                            "company": "ABC Corp",
+                            "status": "New",
+                            "source": "Website",
+                            "address": "123 Main St",
+                            "city": "New York",
+                            "country": "USA",
+                            "custom_fields": {
+                                "Last Contact": "2023-06-15",
+                                "Interest": "Product Demo"
+                            }
+                        },
+                        {
+                            "id": "lead2",
+                            "name": "Jane Smith",
+                            "email": "jane.smith@example.com",
+                            "phone": "0987654321",
+                            "company": "XYZ Inc",
+                            "status": "Qualified",
+                            "source": "Referral",
+                            "address": "456 Park Ave",
+                            "city": "Boston",
+                            "country": "USA",
+                            "custom_fields": {
+                                "Last Contact": "2023-06-20",
+                                "Interest": "Pricing"
+                            }
+                        }
+                    ],
+                    "total": 2,
+                    "page": 1,
+                    "per_page": 100
+                }
+            elif "/leads/" in endpoint and method == "GET":
+                # Return a specific lead
+                lead_id = endpoint.split("/")[-1]
+                return {
+                    "id": lead_id,
+                    "name": "John Doe" if lead_id == "lead1" else "Jane Smith",
+                    "email": f"demo_lead_{lead_id}@example.com",
+                    "phone": "1234567890",
+                    "company": "Demo Company",
+                    "status": "New",
+                    "source": "Website",
+                    "address": "123 Main St",
+                    "city": "New York",
+                    "country": "USA",
+                    "custom_fields": {
+                        "Last Contact": "2023-06-15",
+                        "Interest": "Product Demo"
+                    }
+                }
+        
+        # Mock segments data
+        elif endpoint.startswith('/segments'):
+            if endpoint == "/segments" and method == "GET":
+                # Return a list of mock segments
+                return [
+                    {
+                        "id": "segment1",
+                        "name": "New Leads"
+                    },
+                    {
+                        "id": "segment2",
+                        "name": "Qualified Leads"
+                    }
+                ]
+            elif "/segments/" in endpoint and method == "GET":
+                # Return a specific segment
+                segment_id = endpoint.split("/")[-1]
+                return {
+                    "id": segment_id,
+                    "name": f"Demo Segment {segment_id}",
+                    "criteria": {
+                        "status": "New" if segment_id == "segment1" else "Qualified"
+                    }
+                }
+        
+        # Default empty response
+        return {}
     
     def get_leads(self, filter_criteria: Optional[Dict] = None, page: int = 1, per_page: int = 100) -> Dict:
         """
@@ -92,6 +197,11 @@ class TeleCRMClient:
         """
         Get all leads in a segment with pagination handling
         """
+        # For demo mode, return a simpler result without paging
+        if self.is_demo:
+            response = self.get_leads_by_segment(segment_id)
+            return response.get("data", [])
+            
         all_leads = []
         page = 1
         per_page = 100
